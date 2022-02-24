@@ -225,6 +225,6 @@ app.use(function onError(err, req, res, next) {
   res.end(res.sentry + '\n');
 });
 
-app.listen(port, () => {
-  return console.info(`Express is listening at http://localhost:${port}`);
+app.listen(5000, () => {
+  return console.info(`Express is listening at port 5000`);
 });
