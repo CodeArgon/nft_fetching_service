@@ -9,7 +9,7 @@ import { makeQuery } from './utils/apiHelper';
 import { IContractSchema, IEventSchema } from './utils/types';
 
 const app = express();
-const port = process.argv[2];
+const port = 5000;
 console.info('Using Port: ', port);
 
 let listener: Listener;
