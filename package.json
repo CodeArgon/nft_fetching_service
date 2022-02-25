@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "start": "tsc && node dist/app.js 5000",
+    "start": "tsc && node dist/app.js",
     "lint": "eslint . --ext .ts",
     "format:write": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "test": "echo \"Error: no test specified\" && exit 1",
