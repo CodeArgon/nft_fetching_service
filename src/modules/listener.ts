@@ -6,14 +6,14 @@ import standardAbi from '../config/abi/standardInterface.json';
 import {
   ApiEventData,
   IDatabase,
-  IListen,
+  // IListen,
   IReturn,
   ITokenSchema,
 } from '../utils/types';
 interface IContracts {
   [key: string]: {
     address: string;
-    listen: IListen;
+    listen: Listen;
     events: string[];
     latestBlock: number;
     network: keyof typeof NETWORKS;
@@ -71,9 +71,9 @@ export class Listener {
    * This function will update the local db with timeinterval
    */
   private async _syncFromDb() {
-    setInterval(() => {
-      this._loadDb();
-    }, 100 * 1000); // every 100 seconds
+    // setInterval(() => {
+    //   this._loadDb();
+    // }, 100 * 1000); // every 100 seconds
   }
 
   /**
@@ -154,6 +154,7 @@ export class Listener {
             address: data.address,
             network: this.contracts[data.address].network,
             tokenId: data.returnValues.tokenId,
+            blockNumber: data.blockNumber,
           };
           const { returnValues } = data;
           this._methodHandlerWrapper({
@@ -178,7 +179,11 @@ export class Listener {
         // get max block from it
         this._updateBlock(
           data[0].address,
-          Math.max(...data.map((d) => d.blockNumber ?? 0)),
+          Math.max(
+            ...data.map((d) => {
+              return d.blockNumber ?? 0;
+            }),
+          ),
         );
 
         // call the required functions
@@ -432,12 +437,14 @@ export class Listener {
     if (address) {
       // for sepcific contract and for every event
       if (Object.prototype.hasOwnProperty.call(this.contracts, address)) {
+        console.info(`Listening to Past Events of ${address}`);
         // for every event
         for (const e of this.contracts[address].events) {
-          this.contracts[address].listen.loadPastEvents(
+          await this.contracts[address].listen.loadPastEvents(
             e, // event name
-            (data: ApiEventData | ApiEventData[]) =>
-              this._eventHandlerWrapper(data), // callback
+            (data: ApiEventData | ApiEventData[]) => {
+              this._eventHandlerWrapper(data);
+            }, // callback
             {
               fromBlock: this.contracts[address].latestBlock,
             },
@@ -457,12 +464,14 @@ export class Listener {
     // for every contract
     for (const addr in this.contracts) {
       if (Object.prototype.hasOwnProperty.call(this.contracts, addr)) {
+        console.info(`Listening to Past Events of ${address}`);
         // for every event
         for (const e of this.contracts[addr].events) {
-          this.contracts[addr].listen.loadPastEvents(
+          await this.contracts[addr].listen.loadPastEvents(
             e,
-            (data: ApiEventData | ApiEventData[]) =>
-              this._eventHandlerWrapper(data),
+            (data: ApiEventData | ApiEventData[]) => {
+              return this._eventHandlerWrapper(data);
+            },
             {
               fromBlock: this.contracts[addr].latestBlock,
             },
@@ -487,6 +496,7 @@ export class Listener {
     if (address) {
       // for sepcific contract and for every event
       if (Object.prototype.hasOwnProperty.call(this.contracts, address)) {
+        console.info(`Listening to Future Events of ${address}`);
         // for every event
         for (const e of this.contracts[address].events) {
           if (
@@ -497,8 +507,9 @@ export class Listener {
             // not listening to this event
             this.contracts[address].listen.listen(
               e as unknown as any,
-              (data: ApiEventData | ApiEventData[]) =>
-                this._eventHandlerWrapper(data),
+              (data: ApiEventData | ApiEventData[]) => {
+                return this._eventHandlerWrapper(data);
+              },
             );
             this._updateListening(address, e, true);
           }
@@ -516,6 +527,7 @@ export class Listener {
     // for every contract
     for (const addr in this.contracts) {
       if (Object.prototype.hasOwnProperty.call(this.contracts, addr)) {
+        console.info(`Listening to Future Events of ${address}`);
         // for every event
         for (const e of this.contracts[addr].events) {
           if (
@@ -526,8 +538,9 @@ export class Listener {
             // not listening to this event
             this.contracts[address].listen.listen(
               e as unknown as any,
-              (data: ApiEventData | ApiEventData[]) =>
-                this._eventHandlerWrapper(data),
+              (data: ApiEventData | ApiEventData[]) => {
+                return this._eventHandlerWrapper(data);
+              },
             );
             this._updateListening(addr, e, true);
           }

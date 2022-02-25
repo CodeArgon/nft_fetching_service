@@ -9,7 +9,7 @@ import { makeQuery } from './utils/apiHelper';
 import { IContractSchema, IEventSchema } from './utils/types';
 
 const app = express();
-const port = 5000;
+const port = process.argv[2];
 console.info('Using Port: ', port);
 
 let listener: Listener;
@@ -112,21 +112,21 @@ app.get('/tokens/:address/:tokenId', (req, res) => {
 app.get('/tokens/:address/:network', (req, res) => {
   const obj = makeQuery(req.params as any, req.query, 'data');
   db.fetchToken(obj).then((result) => {
-    res.json([req.params, req.query, obj, result]);
+    res.json(result);
   });
 });
 
 app.get('/tokens/:address', (req, res) => {
   const obj = makeQuery(req.params as any, req.query);
   db.fetchToken(obj).then((result) => {
-    res.json([req.params, req.query, obj, result]);
+    res.json(result);
   });
 });
 
 app.get('/tokens', (req, res) => {
   const obj = makeQuery(req.params as any, req.query);
   db.fetchToken(obj).then((result) => {
-    res.json([req.params, req.query, obj, result]);
+    res.json(result);
   });
 });
 
@@ -225,6 +225,6 @@ app.use(function onError(err, req, res, next) {
   res.end(res.sentry + '\n');
 });
 
-app.listen(5000, () => {
-  return console.info(`Express is listening at port 5000`);
+app.listen(port, () => {
+  return console.info(`Express is listening at http://localhost:${port}`);
 });

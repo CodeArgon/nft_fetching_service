@@ -2,10 +2,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import BN from "bn.js";
-import { ContractOptions } from "web3-eth-contract";
-import { EventLog } from "web3-core";
-import { EventEmitter } from "events";
+import BN from 'bn.js';
+import { ContractOptions } from 'web3-eth-contract';
+import { EventLog } from 'web3-core';
+import { EventEmitter } from 'events';
 import {
   Callback,
   PayableTransactionObject,
@@ -13,7 +13,7 @@ import {
   BlockType,
   ContractEventLog,
   BaseContract,
-} from "./types";
+} from './types';
 
 export interface EventOptions {
   filter?: object;
@@ -60,24 +60,24 @@ export interface StandardInterface extends BaseContract {
   constructor(
     jsonInterface: any[],
     address?: string,
-    options?: ContractOptions
+    options?: ContractOptions,
   ): StandardInterface;
   clone(): StandardInterface;
   methods: {
     approve(
       to: string,
-      tokenId: number | string | BN
+      tokenId: number | string | BN,
     ): NonPayableTransactionObject<void>;
 
     balanceOf(owner: string): NonPayableTransactionObject<string>;
 
     getApproved(
-      tokenId: number | string | BN
+      tokenId: number | string | BN,
     ): NonPayableTransactionObject<string>;
 
     isApprovedForAll(
       owner: string,
-      operator: string
+      operator: string,
     ): NonPayableTransactionObject<boolean>;
 
     name(): NonPayableTransactionObject<string>;
@@ -90,43 +90,43 @@ export interface StandardInterface extends BaseContract {
 
     safeMint(to: string): NonPayableTransactionObject<void>;
 
-    "safeTransferFrom(address,address,uint256)"(
-      from: string,
-      to: string,
-      tokenId: number | string | BN
-    ): NonPayableTransactionObject<void>;
-
-    "safeTransferFrom(address,address,uint256,bytes)"(
+    'safeTransferFrom(address,address,uint256)'(
       from: string,
       to: string,
       tokenId: number | string | BN,
-      _data: string | number[]
+    ): NonPayableTransactionObject<void>;
+
+    'safeTransferFrom(address,address,uint256,bytes)'(
+      from: string,
+      to: string,
+      tokenId: number | string | BN,
+      _data: string | number[],
     ): NonPayableTransactionObject<void>;
 
     setApprovalForAll(
       operator: string,
-      approved: boolean
+      approved: boolean,
     ): NonPayableTransactionObject<void>;
 
     setURI(_uri: string): NonPayableTransactionObject<void>;
 
     supportsInterface(
-      interfaceId: string | number[]
+      interfaceId: string | number[],
     ): NonPayableTransactionObject<boolean>;
 
     symbol(): NonPayableTransactionObject<string>;
 
     tokenByIndex(
-      index: number | string | BN
+      index: number | string | BN,
     ): NonPayableTransactionObject<string>;
 
     tokenOfOwnerByIndex(
       owner: string,
-      index: number | string | BN
+      index: number | string | BN,
     ): NonPayableTransactionObject<string>;
 
     tokenURI(
-      tokenId: number | string | BN
+      tokenId: number | string | BN,
     ): NonPayableTransactionObject<string>;
 
     totalSupply(): NonPayableTransactionObject<string>;
@@ -134,7 +134,7 @@ export interface StandardInterface extends BaseContract {
     transferFrom(
       from: string,
       to: string,
-      tokenId: number | string | BN
+      tokenId: number | string | BN,
     ): NonPayableTransactionObject<void>;
 
     transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
@@ -148,13 +148,13 @@ export interface StandardInterface extends BaseContract {
     ApprovalForAll(cb?: Callback<ApprovalForAll>): EventEmitter;
     ApprovalForAll(
       options?: EventOptions,
-      cb?: Callback<ApprovalForAll>
+      cb?: Callback<ApprovalForAll>,
     ): EventEmitter;
 
     OwnershipTransferred(cb?: Callback<OwnershipTransferred>): EventEmitter;
     OwnershipTransferred(
       options?: EventOptions,
-      cb?: Callback<OwnershipTransferred>
+      cb?: Callback<OwnershipTransferred>,
     ): EventEmitter;
 
     SetURI(cb?: Callback<SetURI>): EventEmitter;
@@ -166,26 +166,26 @@ export interface StandardInterface extends BaseContract {
     allEvents(options?: EventOptions, cb?: Callback<EventLog>): EventEmitter;
   };
 
-  once(event: "Approval", cb: Callback<Approval>): void;
-  once(event: "Approval", options: EventOptions, cb: Callback<Approval>): void;
+  once(event: 'Approval', cb: Callback<Approval>): void;
+  once(event: 'Approval', options: EventOptions, cb: Callback<Approval>): void;
 
-  once(event: "ApprovalForAll", cb: Callback<ApprovalForAll>): void;
+  once(event: 'ApprovalForAll', cb: Callback<ApprovalForAll>): void;
   once(
-    event: "ApprovalForAll",
+    event: 'ApprovalForAll',
     options: EventOptions,
-    cb: Callback<ApprovalForAll>
+    cb: Callback<ApprovalForAll>,
   ): void;
 
-  once(event: "OwnershipTransferred", cb: Callback<OwnershipTransferred>): void;
+  once(event: 'OwnershipTransferred', cb: Callback<OwnershipTransferred>): void;
   once(
-    event: "OwnershipTransferred",
+    event: 'OwnershipTransferred',
     options: EventOptions,
-    cb: Callback<OwnershipTransferred>
+    cb: Callback<OwnershipTransferred>,
   ): void;
 
-  once(event: "SetURI", cb: Callback<SetURI>): void;
-  once(event: "SetURI", options: EventOptions, cb: Callback<SetURI>): void;
+  once(event: 'SetURI', cb: Callback<SetURI>): void;
+  once(event: 'SetURI', options: EventOptions, cb: Callback<SetURI>): void;
 
-  once(event: "Transfer", cb: Callback<Transfer>): void;
-  once(event: "Transfer", options: EventOptions, cb: Callback<Transfer>): void;
+  once(event: 'Transfer', cb: Callback<Transfer>): void;
+  once(event: 'Transfer', options: EventOptions, cb: Callback<Transfer>): void;
 }
