@@ -10,6 +10,7 @@ import {
   IReturn,
   ITokenSchema,
 } from '../utils/types';
+import { eventHandler, methodHandler } from './handlers';
 interface IContracts {
   [key: string]: {
     address: string;
@@ -147,23 +148,34 @@ export class Listener {
   private _functionCalls(data: ApiEventData) {
     // for tokenId
     if (!!data.returnValues.tokenId) {
-      this.contracts[data.address].listen.method(
-        'tokenURI',
-        (methodData: { tokenURI: string }) => {
-          const params = {
-            address: data.address,
-            network: this.contracts[data.address].network,
-            tokenId: data.returnValues.tokenId,
-            blockNumber: data.blockNumber,
-          };
-          const { returnValues } = data;
-          this._methodHandlerWrapper({
-            ...params,
-            data: { ...returnValues, ...methodData },
-          });
-        },
-        [data.returnValues.tokenId],
-      );
+      try {
+        this.contracts[data.address].listen.method(
+          'tokenURI',
+          (methodData: { tokenURI: string }) => {
+            const params = {
+              address: data.address,
+              network: this.contracts[data.address].network,
+              tokenId: data.returnValues.tokenId,
+              blockNumber: data.blockNumber,
+            };
+            const { returnValues } = data;
+            this._methodHandlerWrapper({
+              ...params,
+              data: { ...returnValues, ...methodData },
+            });
+          },
+          [data.returnValues.tokenId],
+        );
+      } catch (err) {
+        const params = {
+          address: data.address,
+          network: this.contracts[data.address].network,
+          tokenId: data.returnValues.tokenId,
+          blockNumber: data.blockNumber,
+        };
+        const { returnValues } = data;
+        this._methodHandlerWrapper({ ...params, data: { ...returnValues } });
+      }
     }
   }
 
@@ -200,7 +212,7 @@ export class Listener {
     }
 
     // add to db
-    this._db.eventHandler(data);
+    eventHandler(data);
   }
 
   /**
@@ -208,7 +220,7 @@ export class Listener {
    * @param {ITokeSchema} data data
    */
   private _methodHandlerWrapper(data: ITokenSchema) {
-    this._db.methodHandler(data);
+    methodHandler(data);
   }
 
   /**
